@@ -9,7 +9,7 @@ using namespace Sync;
 
 const unsigned PORT = 2000;
 
-void readMessage(Socket &);
+void readMessage(Socket &, bool &run);
 
 int main(void)
 {
@@ -38,13 +38,23 @@ int main(void)
 			responseCode = response.ToString();
 		}
 
-		std::thread chatThread(readMessage, std::ref(socket));
+		bool run = true;
+
+		std::thread chatThread(readMessage, std::ref(socket), std::ref(run));
 		chatThread.detach();
 
-		while(true) {
+
+
+		while(run) {
 			std::string input;
 			std::cout << "YOU>";
-			std::cin >> input;
+
+			std::getline(std::cin, input);
+
+			if(input == "exit") {
+				run = false;
+				break;
+			}
 
 			socket.Write(ByteArray(input));
 		}
@@ -54,14 +64,16 @@ int main(void)
 		return 0;
 }
 
-void readMessage(Socket &socket){
-	while(true){
+void readMessage(Socket &socket, bool &run){
+	while(run){
 		ByteArray bytes;
 		socket.Read(bytes);
 
 		auto msg = bytes.ToString();
 
-		if(msg.size() < 2) {
+		if(msg.size() <= 2) {
+			std::cout << "Type 'exit' and press Enter to exit" << std::endl;
+			run = false;
 			break;
 		}
 
@@ -69,8 +81,11 @@ void readMessage(Socket &socket){
 			break;
 		}
 
+		if(msg == "quit") {
+			break;
+		}
 		msg = msg.substr(2);
 
-		std::cout<<std::endl<<"OTHER> "<<bytes.ToString()<<std::endl;
+		std::cout<<std::endl<<"OTHER> "<< msg <<std::endl;
 	}
 }

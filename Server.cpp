@@ -108,7 +108,8 @@ void chatRoom(User u1, User u2) {
 	//spawn 2 new threads
 	std::thread u1input(listenForUserInput, u1, u2);
 	std::thread u2input(listenForUserInput, u2, u1);
-
+	u1input.detach();
+	u2input.detach();
 
 }
 
@@ -116,10 +117,12 @@ void chatRoom(User u1, User u2) {
 // it to `other`.
 void listenForUserInput(User user, User other) {
 	//wait for an input
-	ByteArray input;
-	user.getSocket().Read(input);
+	while(true){
+		ByteArray input;
+		user.getSocket().Read(input);
 
-	other.getSocket().Write(input);
+		other.getSocket().Write(input);
+	}
 
 	//give input to other user in the chatroom
 }

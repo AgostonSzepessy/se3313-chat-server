@@ -32,14 +32,14 @@ int main(void)
 
 		auto responseCode = response.ToString();
 
-		std::cout<< "response code is " << responseCode << std::endl;
-
 		//must wait until server sends up a 1 to be out of queue
 		while(responseCode == "0"){
 			std::cout << "Waiting for other user..." << std::endl;
 			socket.Read(response);
 			responseCode = response.ToString();
 		}
+
+		std::cout<<"Another user joined! Entering chat room..."<<std::endl;
 
 		//start the perpetual reader
 		std::thread read(readMessage, std::ref(socket));
@@ -59,6 +59,6 @@ void readMessage(Socket &socket){
 	while(true){
 		ByteArray msg;
 		socket.Read(msg);
-		//std::cout<<std::endl<<"OTHER> "<<msg.ToString()<<std::endl;
+		std::cout<<std::endl<<"OTHER> "<<msg.ToString()<<std::endl;
 	}
 }

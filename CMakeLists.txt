@@ -19,6 +19,8 @@ set(SERVER_SRC
 	socketserver.h
 	thread.cpp
 	thread.h
+        User.cpp
+        User.h
 	)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

@@ -7,7 +7,7 @@
 
 using namespace Sync;
 
-const unsigned PORT = 2000;
+const unsigned PORT = 2004;
 
 void readMessage(Socket &);
 
@@ -27,12 +27,18 @@ int main(void)
 			return 1;
 		}
 
-		ByteArray responseCode;
-		socket.Read(responseCode);//response code 0 means that you are placed in queue on server
-		std::cout<<responseCode.ToString();
+		ByteArray response;
+		socket.Read(response);//response code 0 means that you are placed in queue on server
+
+		auto responseCode = response.ToString();
+
+		std::cout<< "response code is " << responseCode << std::endl;
+
 		//must wait until server sends up a 1 to be out of queue
-		while(responseCode.ToString()=="0"){
-			socket.Read(responseCode);
+		while(responseCode == "0"){
+			std::cout << "Waiting for other user..." << std::endl;
+			socket.Read(response);
+			responseCode = response.ToString();
 		}
 
 		//start the perpetual reader

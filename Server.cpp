@@ -9,7 +9,7 @@
 
 using namespace Sync;
 
-const int PORT = 2000;
+const int PORT = 2004;
 
 void waitForNewUsers(SocketServer &, bool &);
 

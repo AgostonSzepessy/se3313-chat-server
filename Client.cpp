@@ -38,18 +38,16 @@ int main(void)
 			responseCode = response.ToString();
 		}
 
-//		while(true) {
-//			if(responseCode == "a") {
-////				std::cout << "waiting" << std::endl;
-//				socket.Read(response);
-//				responseCode = response.ToString();
-//			}
-//			else {
-//				break;
-//			}
-//		}
+		std::thread chatThread(readMessage, std::ref(socket));
+		chatThread.detach();
 
+		while(true) {
+			std::string input;
+			std::cout << "YOU>";
+			std::cin >> input;
 
+			socket.Write(ByteArray(input));
+		}
 
 		socket.Close();
 
@@ -60,6 +58,6 @@ void readMessage(Socket &socket){
 	while(true){
 		ByteArray msg;
 		socket.Read(msg);
-		//std::cout<<std::endl<<"OTHER> "<<msg.ToString()<<std::endl;
+		std::cout<<std::endl<<"OTHER> "<<msg.ToString()<<std::endl;
 	}
 }

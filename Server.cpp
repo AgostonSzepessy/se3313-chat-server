@@ -13,8 +13,6 @@ const int PORT = 2000;
 
 void waitForNewUsers(SocketServer &, bool &);
 
-void chatRoom(User, User);
-
 void listenForUserInput(User, User);
 
 // This application is a chat application where the users are matched randomly
@@ -76,6 +74,11 @@ void waitForNewUsers(SocketServer &server, bool &quit)
 					u1.getSocket().Write(ByteArray("1"));
 					u2.getSocket().Write(ByteArray("1"));
 
+					std::thread u1input(listenForUserInput, u1, u2);
+					std::thread u2input(listenForUserInput, u2, u1);
+
+					threads.push_back(std::move(u1input));
+					threads.push_back(std::move(u2input));
 					//start new chat thread with users
 				} else {
 					// Send a 0 to signal that the user needs to wait for someone else can
@@ -105,22 +108,17 @@ void waitForNewUsers(SocketServer &server, bool &quit)
 		}
 }
 
-void chatRoom(User u1, User u2) {
-	//spawn 2 new threads
-	std::thread u1input(listenForUserInput, u1, u2);
-	std::thread u2input(listenForUserInput, u2, u1);
-
-
-}
-
 // Server waits for an input from `user`, and when it receives it, it sends
 // it to `other`.
 void listenForUserInput(User user, User other) {
 	//wait for an input
-	ByteArray input;
-	user.getSocket().Read(input);
+	while(true) {
+		ByteArray input;
+		user.getSocket().Read(input);
 
-	other.getSocket().Write(input);
+		other.getSocket().Write(input);
+	}
+
 
 	//give input to other user in the chatroom
 }

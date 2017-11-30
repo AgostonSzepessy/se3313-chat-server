@@ -2,7 +2,7 @@
 
 #include "socket.h"
 
-User::User(const Sync::Socket &socket) : socket(socket)
+User::User(const Sync::Socket socket) : socket(socket)
 {
 	static unsigned u_id = 0;
 

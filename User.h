@@ -5,7 +5,7 @@
 class User
 {
 	public:
-		User(const Sync::Socket &socket);
+		User(const Sync::Socket socket);
 		Sync::Socket getSocket();
 		unsigned getId() const;
 	private:

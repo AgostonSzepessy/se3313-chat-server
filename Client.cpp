@@ -7,7 +7,7 @@
 
 using namespace Sync;
 
-const unsigned PORT = 2000;
+const unsigned PORT = 2004;
 
 void readMessage(Socket &, bool &run);
 

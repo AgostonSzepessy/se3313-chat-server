@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9.6)
+cmake_minimum_required(VERSION 3.5.1)
 project(chat-server)
 
 set(CMAKE_CXX_STANDARD 14)

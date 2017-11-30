@@ -3,16 +3,16 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string>
+#include <thread>
 
 using namespace Sync;
 
 const unsigned PORT = 2000;
 
+void readMessage(Socket &);
+
 int main(void)
 {
-	// Repeatedly send data to server and read it back
-	for(;;)
-	{
 		// Connect to localhost on port 2000
 		Socket socket("127.0.0.1", PORT);
 
@@ -27,23 +27,32 @@ int main(void)
 			return 1;
 		}
 
-		std::string input;
-		std::cout << "Enter message: ";
-		std::cin >> input;
-
-		if(input == "done")
-		{
-			break;
+		ByteArray responseCode;
+		socket.Read(responseCode);//response code 0 means that you are placed in queue on server
+		std::cout<<responseCode.ToString();
+		//must wait until server sends up a 1 to be out of queue
+		while(responseCode.ToString()=="0"){
+			socket.Read(responseCode);
 		}
 
-		ByteArray data(input);
-		socket.Write(data);
-		ByteArray serverData;
-		socket.Read(serverData);
+		//start the perpetual reader
+		std::thread read(readMessage, std::ref(socket));
 
-		std::cout << serverData.ToString() << std::endl;
+		while(true){
+			std::cout<<"YOU> ";
+			std::string msg;
+			std::cin>>msg;
+			socket.Write(ByteArray(msg));
+		}
 		socket.Close();
-	}
 
-	return 0;
+		return 0;
+}
+
+void readMessage(Socket &socket){
+	while(true){
+		ByteArray msg;
+		socket.Read(msg);
+		//std::cout<<std::endl<<"OTHER> "<<msg.ToString()<<std::endl;
+	}
 }

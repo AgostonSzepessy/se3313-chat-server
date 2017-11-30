@@ -56,8 +56,21 @@ int main(void)
 
 void readMessage(Socket &socket){
 	while(true){
-		ByteArray msg;
-		socket.Read(msg);
-		std::cout<<std::endl<<"OTHER> "<<msg.ToString()<<std::endl;
+		ByteArray bytes;
+		socket.Read(bytes);
+
+		auto msg = bytes.ToString();
+
+		if(msg.size() < 2) {
+			break;
+		}
+
+		if(msg[0] != '|' || msg[1] != '|') {
+			break;
+		}
+
+		msg = msg.substr(2);
+
+		std::cout<<std::endl<<"OTHER> "<<bytes.ToString()<<std::endl;
 	}
 }

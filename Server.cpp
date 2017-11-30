@@ -80,7 +80,8 @@ void waitForNewUsers(SocketServer &server, bool &quit)
 				} else {
 					// Send a 0 to signal that the user needs to wait for someone else can
 					// connect before they can start sending messages
-					u1.getSocket().Write(ByteArray("0"));
+					std::cout << "sending code" << std::endl;
+					u1.getSocket().Write(ByteArray("a"));
 					users.push_back(u1);
 				}
 

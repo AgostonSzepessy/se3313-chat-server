@@ -4,6 +4,7 @@ project(chat-server)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+SET(CMAKE_CXX_FLAGS "-O0")
 
 set(SERVER "server")
 set(CLIENT "client")

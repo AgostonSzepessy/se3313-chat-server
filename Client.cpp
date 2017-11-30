@@ -27,23 +27,30 @@ int main(void)
 			return 1;
 		}
 
-		ByteArray responseCode;
-		socket.Read(responseCode);//response code 0 means that you are placed in queue on server
-		std::cout<<responseCode.ToString();
-		//must wait until server sends up a 1 to be out of queue
-		while(responseCode.ToString()=="0"){
-			socket.Read(responseCode);
+		ByteArray response;
+		socket.Read(response);//response code 0 means that you are placed in queue on server
+
+		auto responseCode = response.ToString();
+		std::cout << "response code is " << responseCode << std::endl;;
+
+		while(responseCode == "a") {
+			socket.Read(response);
+			responseCode = response.ToString();
 		}
 
-		//start the perpetual reader
-		std::thread read(readMessage, std::ref(socket));
+//		while(true) {
+//			if(responseCode == "a") {
+////				std::cout << "waiting" << std::endl;
+//				socket.Read(response);
+//				responseCode = response.ToString();
+//			}
+//			else {
+//				break;
+//			}
+//		}
 
-		while(true){
-			std::cout<<"YOU> ";
-			std::string msg;
-			std::cin>>msg;
-			socket.Write(ByteArray(msg));
-		}
+
+
 		socket.Close();
 
 		return 0;

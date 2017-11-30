@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 		while(quit)
 		{
 			std::cin>>in;
-			quit = in=="quit";
+			quit = !(in=="quit");
 		}
 
 		server.Shutdown();

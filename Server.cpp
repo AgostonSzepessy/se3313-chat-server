@@ -83,7 +83,6 @@ void waitForNewUsers(SocketServer &server, bool &quit)
 				} else {
 					// Send a 0 to signal that the user needs to wait for someone else can
 					// connect before they can start sending messages
-					std::cout << "sending code" << std::endl;
 					u1.getSocket().Write(ByteArray("a"));
 					users.push_back(u1);
 				}
@@ -114,11 +113,19 @@ void listenForUserInput(User user, User other) {
 	//wait for an input
 	while(true) {
 		ByteArray input;
-		user.getSocket().Read(input);
-
-		other.getSocket().Write(input);
+		try{
+			user.getSocket().Read(input);
+		}catch(const std::string &exception){
+			other.getSocket().Write(ByteArray("quit"));
+			other.getSocket().Close();
+			break;
+		}
+		try{
+			other.getSocket().Write(ByteArray("||"+input.ToString()));
+		}catch(const std::string &exception){
+			user.getSocket().Write(ByteArray("quit"));
+			user.getSocket().Close();
+			break;
+		}
 	}
-
-
-	//give input to other user in the chatroom
 }

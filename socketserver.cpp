@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <algorithm>
 namespace Sync{
-	
+
 SocketServer::SocketServer(int port)
 {
     // The first call has to be to socket(). This creates a UNIX socket.
@@ -17,7 +17,7 @@ SocketServer::SocketServer(int port)
     bzero((char*)&socketDescriptor,sizeof(sockaddr_in));
     socketDescriptor.sin_family = AF_INET;
     socketDescriptor.sin_port = htons(port);
-    socketDescriptor.sin_addr.s_addr = INADDR_ANY;
+    socketDescriptor.sin_addr.s_addr = htonl(INADDR_ANY);
     if (bind(socketFD,(sockaddr*)&socketDescriptor,sizeof(socketDescriptor)) < 0)
         throw std::string("Unable to bind socket to requested port");
 

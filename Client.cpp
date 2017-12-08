@@ -15,6 +15,7 @@ int main(void)
 {
 		// Connect to localhost on port 2000
 		Socket socket("127.0.0.1", PORT);
+		//Socket socket("172.31.51.241", PORT);
 
 		// Only start client if the server has been started
 		try
